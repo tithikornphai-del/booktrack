@@ -1,33 +1,190 @@
+/* =========================================================
+   BOOKTRACK GITHUB PAGES → APPS SCRIPT JSONP BRIDGE
+   Uses a plain global callback name for maximum compatibility
+   with Apps Script redirects and in-app browsers.
+========================================================= */
 
-const BOOKTRACK_API_URL='https://script.google.com/macros/s/AKfycbwKG4l3_5zTsjB5eb_RO8W9cpQwhWDyX5XzsKZM0b8HT3BW9k4bCWVAPtwy0Ge_UTWl9Q/exec';
-window.__booktrackJsonp=window.__booktrackJsonp||{};
-function booktrackApiRequest(action,payload){
-  return new Promise((resolve,reject)=>{
-    const n='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-    const s=document.createElement('script');
-    let timer;
-    const clean=()=>{clearTimeout(timer);delete window.__booktrackJsonp[n];s.remove();};
-    window.__booktrackJsonp[n]=r=>{clean();r&&r.ok?resolve(r.data):reject(new Error(r?.error?.message||'API request failed.'));};
-    const q=new URLSearchParams({api:'1',action,callback:'__booktrackJsonp.'+n,payload:JSON.stringify(payload||{})});
-    s.src=BOOKTRACK_API_URL+'?'+q.toString();s.async=true;
-    s.onerror=()=>{clean();reject(new Error('Cannot connect to BookTrack API.'));};
-    timer=setTimeout(()=>{clean();reject(new Error('BookTrack API request timed out.'));},20000);
-    document.head.appendChild(s);
+const BOOKTRACK_API_URL = 'https://script.google.com/macros/s/AKfycbwKG4l3_5zTsjB5eb_RO8W9cpQwhWDyX5XzsKZM0b8HT3BW9k4bCWVAPtwy0Ge_UTWl9Q/exec';
+
+function booktrackApiRequest(action, payload) {
+  return new Promise((resolve, reject) => {
+    const callbackName =
+      '__booktrack_cb_' +
+      Date.now() +
+      '_' +
+      Math.random().toString(36).slice(2);
+
+    const script = document.createElement('script');
+
+    let settled = false;
+
+    const cleanup = () => {
+      if (settled) return;
+      settled = true;
+
+      clearTimeout(timeoutId);
+
+      try {
+        delete window[callbackName];
+      } catch (_) {
+        window[callbackName] = undefined;
+      }
+
+      script.remove();
+    };
+
+    window[callbackName] = response => {
+      if (settled) return;
+
+      clearTimeout(timeoutId);
+      settled = true;
+
+      try {
+        delete window[callbackName];
+      } catch (_) {
+        window[callbackName] = undefined;
+      }
+
+      script.remove();
+
+      if (response && response.ok === true) {
+        resolve(response.data);
+      } else {
+        reject(
+          new Error(
+            (response &&
+              response.error &&
+              response.error.message) ||
+            'BookTrack API request failed.'
+          )
+        );
+      }
+    };
+
+    const params = new URLSearchParams();
+
+    params.set('api', '1');
+    params.set('action', action);
+    params.set('callback', callbackName);
+    params.set(
+      'payload',
+      JSON.stringify(
+        payload === undefined
+          ? {}
+          : payload
+      )
+    );
+
+    // Prevent stale redirected responses from browser/CDN caches.
+    params.set('_', String(Date.now()));
+
+    script.src =
+      BOOKTRACK_API_URL +
+      '?' +
+      params.toString();
+
+    script.async = true;
+
+    script.onerror = () => {
+      cleanup();
+      reject(
+        new Error(
+          'Cannot connect to BookTrack API.'
+        )
+      );
+    };
+
+    const timeoutId = setTimeout(
+      () => {
+        cleanup();
+
+        reject(
+          new Error(
+            'BookTrack API request timed out.'
+          )
+        );
+      },
+      20000
+    );
+
+    document.head.appendChild(script);
   });
 }
-window.google=window.google||{};window.google.script=window.google.script||{};
-function createRunner(ok,fail){
-  return new Proxy({},{get(_t,p){
-    if(p==='withSuccessHandler')return h=>createRunner(h,fail);
-    if(p==='withFailureHandler')return h=>createRunner(ok,h);
-    return (...a)=>booktrackApiRequest(String(p),a[0]).then(d=>ok&&ok(d)).catch(e=>fail?fail(e):console.error(e));
-  }});
+
+
+/* Compatibility layer so existing google.script.run code can stay unchanged. */
+
+function createBookTrackRunner(
+  successHandler,
+  failureHandler
+) {
+  return new Proxy(
+    {},
+    {
+      get(_target, prop) {
+
+        if (
+          prop ===
+          'withSuccessHandler'
+        ) {
+          return handler =>
+            createBookTrackRunner(
+              handler,
+              failureHandler
+            );
+        }
+
+        if (
+          prop ===
+          'withFailureHandler'
+        ) {
+          return handler =>
+            createBookTrackRunner(
+              successHandler,
+              handler
+            );
+        }
+
+        return (...args) => {
+          booktrackApiRequest(
+            String(prop),
+            args[0]
+          )
+            .then(result => {
+              if (
+                typeof successHandler ===
+                'function'
+              ) {
+                successHandler(result);
+              }
+            })
+            .catch(error => {
+              if (
+                typeof failureHandler ===
+                'function'
+              ) {
+                failureHandler(error);
+              } else {
+                console.error(error);
+              }
+            });
+        };
+      }
+    }
+  );
 }
-window.google.script.run=new Proxy({},{get(_t,p){
-  if(p==='withSuccessHandler')return h=>createRunner(h,null);
-  if(p==='withFailureHandler')return h=>createRunner(null,h);
-  return (...a)=>booktrackApiRequest(String(p),a[0]);
-}});
+
+window.google =
+  window.google || {};
+
+window.google.script =
+  window.google.script || {};
+
+window.google.script.run =
+  createBookTrackRunner(
+    null,
+    null
+  );
 
 const state = {
 
@@ -2615,7 +2772,7 @@ function initializeMusicPlayer() {
 
   focusAudio.volume =
     Number(
-      volumeSlider?.value || 35
+      volumeSlider?.value || 10
     ) / 100;
 
 
