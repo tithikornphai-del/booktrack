@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  
+
+  <meta charset="UTF-8">
+<title>BookTrack</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- ========================================
+     HEADER
+======================================== -->
+
+<header class="site-header">
+
+
+  <div class="header-top-row">
+
+
+    <a
+      href="#"
+      class="brand"
+      onclick="navigateTo('dashboard'); return false;"
+    >
+
+      <span class="brand-mark">
+        B
+      </span>
+
+      <span class="brand-name">
+        BookTrack
+      </span>
+
+    </a>
+
+
+    <div class="header-actions">
+
+
+      <button
+        id="languageToggle"
+        type="button"
+        class="header-control"
+        onclick="toggleLanguage()"
+        aria-label="Change language"
+      >
+        TH
+      </button>
+
+
+      <button
+        id="themeToggle"
+        type="button"
+        class="header-control theme-control"
+        onclick="toggleTheme()"
+        aria-label="Change theme"
+      >
+        ☀
+      </button>
+
+
+      <button
+        type="button"
+        class="header-add-button"
+        onclick="navigateTo('addBook')"
+      >
+
+        <span>
+          +
+        </span>
+
+        <span data-i18n="navAddBook">
+          Add Book
+        </span>
+
+      </button>
+
+
+    </div>
+
+
+  </div>
+
+
+  <nav class="desktop-nav">
+
+
+    <button
+      type="button"
+      class="nav-link active"
+      data-view="dashboard"
+      onclick="navigateTo('dashboard')"
+      data-i18n="navDashboard"
+    >
+      Dashboard
+    </button>
+
+
+    <button
+      type="button"
+      class="nav-link"
+      data-view="library"
+      onclick="navigateTo('library')"
+      data-i18n="navLibrary"
+    >
+      Library
+    </button>
+
+
+    <button
+      type="button"
+      class="nav-link"
+      data-view="addBook"
+      onclick="navigateTo('addBook')"
+      data-i18n="navAddBook"
+    >
+      Add Book
+    </button>
+
+
+  </nav>
+
+
+</header>
+
+
+
+<!-- ========================================
+     MAIN
+======================================== -->
+
+<main class="main-content">
+
+
+<!-- DASHBOARD -->
+
+<section
+  id="view-dashboard"
+  class="app-view active"
+>
+
+
+  <div class="hero">
+
+
+    <span
+      class="hero-eyebrow"
+      data-i18n="heroEyebrow"
+    >
+      YOUR READING SPACE
+    </span>
+
+
+    <h1 class="hero-title">
+
+      <span data-i18n="heroTitle1">
+        Every book leaves
+      </span>
+
+      <span
+        class="hero-title-muted"
+        data-i18n="heroTitle2"
+      >
+        a trace.
+      </span>
+
+    </h1>
+
+
+    <p
+      class="hero-description"
+      data-i18n="heroDescription"
+    >
+      Track your books, follow your reading progress,
+      and build a library that grows with you.
+    </p>
+
+
+  </div>
+
+
+
+  <section class="stats-grid">
+
+
+    <article class="stat-card">
+
+      <span
+        class="stat-label"
+        data-i18n="totalBooks"
+      >
+        Total books
+      </span>
+
+      <strong
+        id="statTotalBooks"
+        class="stat-value"
+      >
+        0
+      </strong>
+
+      <span
+        class="stat-meta"
+        data-i18n="yourCollection"
+      >
+        Your collection
+      </span>
+
+    </article>
+
+
+
+    <article class="stat-card accent-card">
+
+      <span
+        class="stat-label"
+        data-i18n="currentlyReading"
+      >
+        Currently reading
+      </span>
+
+      <strong
+        id="statReading"
+        class="stat-value"
+      >
+        0
+      </strong>
+
+      <span
+        class="stat-meta"
+        data-i18n="keepGoing"
+      >
+        Keep going
+      </span>
+
+    </article>
+
+
+
+    <article class="stat-card">
+
+      <span
+        class="stat-label"
+        data-i18n="completed"
+      >
+        Completed
+      </span>
+
+      <strong
+        id="statCompleted"
+        class="stat-value"
+      >
+        0
+      </strong>
+
+      <span
+        class="stat-meta"
+        data-i18n="booksFinished"
+      >
+        Books finished
+      </span>
+
+    </article>
+
+
+
+    <article class="stat-card">
+
+      <span
+        class="stat-label"
+        data-i18n="wantToRead"
+      >
+        Want to Read
+      </span>
+
+      <strong
+        id="statWantToRead"
+        class="stat-value"
+      >
+        0
+      </strong>
+
+      <span
+        class="stat-meta"
+        data-i18n="readingList"
+      >
+        Your reading list
+      </span>
+
+    </article>
+
+
+  </section>
+
+
+
+  <section class="content-section">
+
+
+    <div class="section-header">
+
+
+      <div>
+
+        <span
+          class="section-eyebrow"
+          data-i18n="inProgress"
+        >
+          IN PROGRESS
+        </span>
+
+        <h2 data-i18n="continueReading">
+          Continue reading
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="text-button"
+        onclick="navigateTo('library')"
+        data-i18n="viewLibrary"
+      >
+        View library →
+      </button>
+
+
+    </div>
+
+
+    <div id="continueReadingContent"></div>
+
+
+  </section>
+
+
+</section>
+
+
+
+<!-- LIBRARY -->
+
+<section
+  id="view-library"
+  class="app-view"
+>
+
+
+  <div class="page-heading">
+
+
+    <span
+      class="section-eyebrow"
+      data-i18n="collection"
+    >
+      COLLECTION
+    </span>
+
+
+    <h1 data-i18n="yourLibrary">
+      Your Library
+    </h1>
+
+
+    <p data-i18n="libraryDescription">
+      Everything you've saved, started and finished —
+      all in one place.
+    </p>
+
+
+  </div>
+
+
+
+  <div class="library-toolbar">
+
+
+    <div class="search-wrapper">
+
+
+      <span class="search-icon">
+        ⌕
+      </span>
+
+
+      <input
+        id="librarySearch"
+        type="search"
+        placeholder="Search books, authors or genres..."
+        data-i18n-placeholder="searchPlaceholder"
+      >
+
+
+    </div>
+
+
+
+    <select id="statusFilter">
+
+
+      <option
+        value="All"
+        data-i18n="allStatus"
+      >
+        All Status
+      </option>
+
+
+      <option
+        value="Want to Read"
+        data-i18n="wantToRead"
+      >
+        Want to Read
+      </option>
+
+
+      <option
+        value="Reading"
+        data-i18n="reading"
+      >
+        Reading
+      </option>
+
+
+      <option
+        value="Completed"
+        data-i18n="completed"
+      >
+        Completed
+      </option>
+
+
+    </select>
+
+
+
+    <select id="genreFilter">
+
+      <option
+        value="All"
+        data-i18n="allGenres"
+      >
+        All Genres
+      </option>
+
+    </select>
+
+
+  </div>
+
+
+
+  <div class="library-results-bar">
+
+
+    <span id="libraryResultCount">
+      0 books
+    </span>
+
+
+    <button
+      id="clearFiltersButton"
+      type="button"
+      class="clear-filter-button"
+      onclick="clearLibraryFilters()"
+      data-i18n="clearFilters"
+    >
+      Clear filters
+    </button>
+
+
+  </div>
+
+
+  <div id="libraryContent"></div>
+
+
+</section>
+
+
+
+<!-- ADD BOOK -->
+
+<section
+  id="view-addBook"
+  class="app-view"
+>
+
+
+  <div class="page-heading">
+
+
+    <span
+      class="section-eyebrow"
+      data-i18n="newEntry"
+    >
+      NEW ENTRY
+    </span>
+
+
+    <h1 data-i18n="addABook">
+      Add a Book
+    </h1>
+
+
+    <p data-i18n="addDescription">
+      Start with the essentials.
+      Add more details only when you need them.
+    </p>
+
+
+  </div>
+
+
+
+  <div class="form-layout">
+
+
+    <div class="book-preview">
+
+
+      <div
+        id="coverPreview"
+        class="cover-placeholder"
+      >
+
+        <span data-i18n="bookCover">
+          Book Cover
+        </span>
+
+      </div>
+
+
+      <p data-i18n="coverHint">
+        Add a cover later if you want.
+      </p>
+
+
+    </div>
+
+
+
+    <form
+      id="addBookForm"
+      class="book-form"
+    >
+
+
+      <div class="form-group">
+
+
+        <label
+          for="title"
+          data-i18n="bookTitle"
+        >
+          Book title
+        </label>
+
+
+        <input
+          id="title"
+          type="text"
+          placeholder="e.g. Atomic Habits"
+          required
+        >
+
+
+      </div>
+
+
+
+      <div class="form-group">
+
+
+        <label
+          for="author"
+          data-i18n="author"
+        >
+          Author
+        </label>
+
+
+        <input
+          id="author"
+          type="text"
+          placeholder="e.g. James Clear"
+          required
+        >
+
+
+      </div>
+
+
+
+      <div class="form-row">
+
+
+        <div class="form-group">
+
+
+          <label
+            for="totalPages"
+            data-i18n="totalPages"
+          >
+            Total pages
+          </label>
+
+
+          <input
+            id="totalPages"
+            type="number"
+            min="1"
+            placeholder="320"
+            required
+          >
+
+
+        </div>
+
+
+
+        <div class="form-group">
+
+
+          <label
+            for="status"
+            data-i18n="status"
+          >
+            Status
+          </label>
+
+
+          <select id="status">
+
+
+            <option
+              value="Want to Read"
+              data-i18n="wantToRead"
+            >
+              Want to Read
+            </option>
+
+
+            <option
+              value="Reading"
+              data-i18n="reading"
+            >
+              Reading
+            </option>
+
+
+            <option
+              value="Completed"
+              data-i18n="completed"
+            >
+              Completed
+            </option>
+
+
+          </select>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <button
+        id="moreDetailsButton"
+        type="button"
+        class="more-details-button"
+        onclick="toggleMoreDetails()"
+      >
+
+        <span id="moreDetailsIcon">
+          +
+        </span>
+
+        <span
+          id="moreDetailsText"
+          data-i18n="addMoreDetails"
+        >
+          Add more details
+        </span>
+
+      </button>
+
+
+
+      <div
+        id="moreDetailsPanel"
+        class="more-details-panel"
+      >
+
+
+        <div class="more-details-inner">
+
+
+          <div class="form-group">
+
+
+            <label
+              for="genre"
+              data-i18n="genre"
+            >
+              Genre
+            </label>
+
+
+            <input
+              id="genre"
+              type="text"
+              placeholder="e.g. Fantasy"
+            >
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+            <label
+              for="coverURL"
+              data-i18n="coverUrl"
+            >
+              Cover URL
+            </label>
+
+
+            <input
+              id="coverURL"
+              type="url"
+              placeholder="https://..."
+            >
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+            <label
+              for="rating"
+              data-i18n="rating"
+            >
+              Rating
+            </label>
+
+
+            <select id="rating">
+
+
+              <option
+                value="0"
+                data-i18n="notRated"
+              >
+                Not rated
+              </option>
+
+
+              <option value="1">
+                1 / 5
+              </option>
+
+              <option value="2">
+                2 / 5
+              </option>
+
+              <option value="3">
+                3 / 5
+              </option>
+
+              <option value="4">
+                4 / 5
+              </option>
+
+              <option value="5">
+                5 / 5
+              </option>
+
+
+            </select>
+
+
+          </div>
+
+
+
+          <div class="form-group">
+
+
+            <label
+              for="notes"
+              data-i18n="notes"
+            >
+              Notes
+            </label>
+
+
+            <textarea
+              id="notes"
+              rows="5"
+              placeholder="Write something about this book..."
+              data-i18n-placeholder="notesPlaceholder"
+            ></textarea>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="form-actions">
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          onclick="navigateTo('library')"
+          data-i18n="cancel"
+        >
+          Cancel
+        </button>
+
+
+        <button
+          id="addBookSubmitButton"
+          type="submit"
+          class="primary-button"
+        >
+
+          <span
+            id="addBookSubmitText"
+            data-i18n="addBookButton"
+          >
+            Add Book
+          </span>
+
+        </button>
+
+
+      </div>
+
+
+    </form>
+
+
+  </div>
+
+
+</section>
+
+
+
+<!-- BOOK DETAIL -->
+
+<section
+  id="view-bookDetail"
+  class="app-view"
+>
+
+
+  <button
+    type="button"
+    class="back-button"
+    onclick="navigateTo('library')"
+    data-i18n="backToLibrary"
+  >
+    ← Back to Library
+  </button>
+
+
+  <div
+    id="bookDetailContent"
+    class="book-detail-layout"
+  ></div>
+
+
+</section>
+
+
+</main>
+
+
+
+<!-- ========================================
+     DELETE MODAL
+======================================== -->
+
+<div
+  id="deleteModal"
+  class="modal-backdrop"
+>
+
+
+  <div class="modal-card">
+
+
+    <span
+      class="modal-eyebrow"
+      data-i18n="deleteBook"
+    >
+      DELETE BOOK
+    </span>
+
+
+    <h2 data-i18n="removeBook">
+      Remove this book?
+    </h2>
+
+
+    <p data-i18n="deleteWarning">
+      This action will permanently remove
+      the book from your collection.
+    </p>
+
+
+
+    <div class="modal-actions">
+
+
+      <button
+        type="button"
+        class="secondary-button"
+        onclick="closeDeleteModal()"
+        data-i18n="cancel"
+      >
+        Cancel
+      </button>
+
+
+      <button
+        id="confirmDeleteButton"
+        type="button"
+        class="danger-button"
+        onclick="confirmDeleteBook()"
+        data-i18n="deleteBook"
+      >
+        Delete Book
+      </button>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+<!-- ========================================
+     MUSIC PLAYER
+======================================== -->
+
+<div
+  id="focusPlayer"
+  class="focus-player"
+>
+
+
+  <audio
+    id="focusAudio"
+    preload="metadata"
+  ></audio>
+
+
+  <button
+    type="button"
+    class="focus-player-mini-button"
+    onclick="toggleFocusPlayer()"
+    aria-label="Open player"
+  >
+    ♪
+  </button>
+
+
+
+  <div class="focus-player-card">
+
+
+    <div class="focus-player-top">
+
+
+      <div class="focus-track-cover">
+
+
+        <img
+          id="focusTrackCover"
+          src=""
+          alt="Track cover"
+        >
+
+
+        <div
+          id="focusPlayingIndicator"
+          class="focus-playing-indicator"
+        >
+
+          <span></span>
+          <span></span>
+          <span></span>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="focus-track-info">
+
+
+        <span
+          class="focus-now-playing"
+          data-i18n="nowPlaying"
+        >
+          NOW PLAYING
+        </span>
+
+
+        <h4 id="focusTrackTitle">
+          Loading focus music...
+        </h4>
+
+
+        <p>
+          BOOKTRACK FOCUS
+        </p>
+
+
+      </div>
+
+
+
+      <button
+        type="button"
+        class="focus-icon-button"
+        onclick="toggleFocusPlayer()"
+        aria-label="Minimize player"
+      >
+        ⌄
+      </button>
+
+
+    </div>
+
+
+
+    <div class="focus-player-bottom">
+
+
+      <div class="focus-main-controls">
+
+
+        <button
+          type="button"
+          class="focus-skip-button"
+          onclick="previousMusicTrack()"
+          aria-label="Previous track"
+        >
+          ‹
+        </button>
+
+
+        <button
+          id="focusPlayButton"
+          type="button"
+          class="focus-play-button"
+          onclick="toggleMusicPlayback()"
+          aria-label="Play or pause"
+        >
+          ▶
+        </button>
+
+
+        <button
+          type="button"
+          class="focus-skip-button"
+          onclick="nextMusicTrack()"
+          aria-label="Next track"
+        >
+          ›
+        </button>
+
+
+      </div>
+
+
+
+      <div class="focus-progress-section">
+
+
+        <input
+          id="focusProgress"
+          class="focus-progress-slider"
+          type="range"
+          min="0"
+          max="100"
+          step="0.1"
+          value="0"
+        >
+
+
+        <div class="focus-time-row">
+
+          <span id="focusCurrentTime">
+            0:00
+          </span>
+
+          <span id="focusDuration">
+            0:00
+          </span>
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+
+
+    <div class="focus-volume-row">
+
+
+      <span data-i18n="volume">
+        VOLUME
+      </span>
+
+
+      <input
+        id="focusVolume"
+        type="range"
+        min="0"
+        max="100"
+        step="5"
+        value="35"
+      >
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+<!-- ========================================
+     TOAST
+======================================== -->
+
+<div
+  id="toast"
+  class="toast"
+>
+
+  <span id="toastMessage"></span>
+
+</div>
+
+
+
+<script src="scripts.js"></script>
+
+
+<script>
+/* =========================================================
+   BOOKTRACK FINAL UX FIX
+   1. Default music volume = 10%
+   2. Hide duplicate "+ Add Book" button on Add Book page
+========================================================= */
+
+(function () {
+  const DEFAULT_VOLUME = 0.10;
+
+  /* -------------------------
+     MUSIC DEFAULT VOLUME 10%
+  ------------------------- */
+  function setBookTrackVolume() {
+    const audio =
+      document.getElementById('audioPlayer') ||
+      document.querySelector('audio');
+
+    if (audio) {
+      // ตั้งเสียงเริ่มต้น 10%
+      audio.volume = DEFAULT_VOLUME;
+
+      // ปรับ volume slider ให้ตรงกับ 10%
+      const volumeSliders = document.querySelectorAll(
+        'input[type="range"]'
+      );
+
+      volumeSliders.forEach(slider => {
+        const id = (slider.id || '').toLowerCase();
+        const className = (slider.className || '').toLowerCase();
+
+        if (
+          id.includes('volume') ||
+          className.includes('volume')
+        ) {
+          const max = Number(slider.max) || 1;
+
+          // รองรับทั้ง slider max="1" และ max="100"
+          slider.value = max > 1
+            ? DEFAULT_VOLUME * max
+            : DEFAULT_VOLUME;
+        }
+      });
+    }
+  }
+
+  /* -------------------------
+     HIDE DUPLICATE ADD BUTTON
+     WHEN ON ADD BOOK VIEW
+  ------------------------- */
+  function updateAddBookButton() {
+    const addView =
+      document.getElementById('addBookView') ||
+      document.getElementById('add-book-view') ||
+      document.querySelector('[data-view="addBook"]') ||
+      document.querySelector('.add-book-view');
+
+    const topAddButtons = document.querySelectorAll(
+      '.add-book-btn, .header-add-btn, [data-action="add-book"]'
+    );
+
+    if (!addView || !topAddButtons.length) return;
+
+    const style = window.getComputedStyle(addView);
+
+    const isAddBookVisible =
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      !addView.classList.contains('hidden');
+
+    topAddButtons.forEach(button => {
+      button.style.display = isAddBookVisible ? 'none' : '';
+    });
+  }
+
+  /* -------------------------
+     INITIALIZE
+  ------------------------- */
+  function initFinalUXFix() {
+    setBookTrackVolume();
+    updateAddBookButton();
+
+    // ตรวจจับตอน SPA เปลี่ยนหน้า
+    const observer = new MutationObserver(() => {
+      updateAddBookButton();
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFinalUXFix);
+  } else {
+    initFinalUXFix();
+  }
+})();
+</script>
+</body>
+
+</html>
