@@ -1,5 +1,5 @@
 
-const BOOKTRACK_API_URL='https://script.google.com/macros/s/AKfycbxopgCq_WpG20EFqppbpOi9Soea91IhWyEnwnqeFao8J8QWE2C5Bf13mQSyoXuibvyJLg/exec';
+const BOOKTRACK_API_URL='https://script.google.com/macros/s/AKfycbwKG4l3_5zTsjB5eb_RO8W9cpQwhWDyX5XzsKZM0b8HT3BW9k4bCWVAPtwy0Ge_UTWl9Q/exec';
 window.__booktrackJsonp=window.__booktrackJsonp||{};
 function booktrackApiRequest(action,payload){
   return new Promise((resolve,reject)=>{
